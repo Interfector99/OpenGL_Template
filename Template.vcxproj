@@ -161,11 +161,23 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\EBO.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\stb.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\VAO.cpp" />
+    <ClCompile Include="src\VBO.cpp" />
+    <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Window.hpp" />
+    <ClInclude Include="include\EBO.hpp" />
+    <ClInclude Include="include\Entity.hpp" />
+    <ClInclude Include="include\Shader.hpp" />
+    <ClInclude Include="include\Texture.hpp" />
+    <ClInclude Include="include\VAO.hpp" />
+    <ClInclude Include="include\VBO.hpp" />
+    <ClInclude Include="include\Window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
