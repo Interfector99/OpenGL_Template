@@ -1,7 +1,7 @@
 #include "Entity.hpp"
 
 GLfloat vertices[] =
-{//  COORDINATES            COLORS              TexCoord
+{//  COORDINATES            COLORS              TEXTURES
 	-0.01f, -0.01f, 0.0f,	1.0f, 1.0f, 1.0f,	0.0f, 0.0f,
 	-0.01f,  0.01f, 0.0f,   1.0f, 1.0f, 1.0f,	0.0f, 1.0f,
 	 0.01f,  0.01f, 0.0f,   1.0f, 1.0f, 1.0f,	1.0f, 1.0f,
@@ -19,33 +19,42 @@ Entity::Entity()
 
 }
 
-void Entity::initialize(std::string vert, std::string frag, std::string texturepath)
+void Entity::initialize(std::string vertexPath, std::string fragmentPath, std::string texturePath)
 {
-	shader.init(vert.c_str(), frag.c_str());
-	vao.init();
-	vao.bind();
-	vbo.init(vertices, sizeof(vertices));
-	ebo.init(indices, sizeof(indices));
-	vao.linkAttribute(vbo, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
-	vao.linkAttribute(vbo, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	vao.linkAttribute(vbo, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	vao.unbind();
-	vbo.unbind();
-	ebo.unbind();
-	texture.init(texturepath.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	texture.setTextureUnit(shader, "tex0", 0);
+	m_Shader.init(vertexPath.c_str(), fragmentPath.c_str());
+	m_Vao.init();
+	m_Vao.bind();
+	m_Vbo.init(vertices, sizeof(vertices));
+	m_Ebo.init(indices, sizeof(indices));
+	m_Vao.linkAttribute(m_Vbo, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+	m_Vao.linkAttribute(m_Vbo, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	m_Vao.linkAttribute(m_Vbo, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	m_Vao.unbind();
+	m_Vbo.unbind();
+	m_Ebo.unbind();
+	m_Texture.init(texturePath.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	m_Texture.setTextureUnit(m_Shader, "tex0", 0);
+
+	m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
+	m_Scale = glm::vec3(50.0f, 50.0f, 0.0f);;
+	m_Rotation = glm::vec3(0.0f, 0.0f, 0.0f);;
 }
 
 void Entity::render()
 {
-	shader.bind();
-	texture.bind();
-	vao.bind();
+	m_Shader.bind();
+	m_Texture.bind();
+	m_Vao.bind();
 
-	transform = glm::mat4(1.0f);
-	transform = glm::scale(transform, glm::vec3(50.0f,50.0f,0.0f));
-	transformLoc = glGetUniformLocation(shader.ID, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+	m_Rotation.z += 1.0f;
+	m_Transform = glm::mat4(1.0f);
+	m_Transform = glm::translate(m_Transform, m_Position);
+	m_Transform = glm::scale(m_Transform, m_Scale);
+	m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.x), glm::vec3(1.0, 0.0, 0.0));
+	m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.y), glm::vec3(0.0, 1.0, 0.0));
+	m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.z), glm::vec3(0.0, 0.0, 1.0));
+	m_TransformReference = glGetUniformLocation(m_Shader.ID, "transform");
+	glUniformMatrix4fv(m_TransformReference, 1, GL_FALSE, glm::value_ptr(m_Transform));
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -54,9 +63,9 @@ void Entity::render()
 
 void Entity::destroy()
 {
-	vao.destroy();
-	vbo.destroy();
-	ebo.destroy();
-	texture.destroy();
-	shader.destroy();
+	m_Vao.destroy();
+	m_Vbo.destroy();
+	m_Ebo.destroy();
+	m_Texture.destroy();
+	m_Shader.destroy();
 }

@@ -43,7 +43,7 @@ namespace display
 	{
 		this->entity.initialize("resources/shaders/entity.vert", 
 								"resources/shaders/entity.frag", 
-								"resources/textures/pacman.jpeg");
+								"resources/textures/pacman.png");
 
 		auto start = std::chrono::high_resolution_clock::now();
 		while (!glfwWindowShouldClose(this->p_Window))

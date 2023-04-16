@@ -22,6 +22,10 @@ namespace Graphics
 		void init(const char* vertexFile, const char* fragmentFile);
 		void bind();
 		void destroy();
+
+		void setBool(const std::string& name, bool value);
+		void setInt(const std::string& name, int value);
+		void setFloat(const std::string& name, float value);
 	private:
 		void compileErrors(unsigned int shader, const char* type);
 	};

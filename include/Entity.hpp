@@ -15,7 +15,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-// own modules
+// Graphics modules
 #include "Texture.hpp"
 #include "Shader.hpp"
 #include "VAO.hpp"
@@ -26,18 +26,24 @@ class Entity
 {
 protected:
 	// graphics
-	Graphics::Shader shader;
-	Graphics::VAO vao;
-	Graphics::VBO vbo;
-	Graphics::EBO ebo;
-	Graphics::Texture texture;
+	Graphics::Shader m_Shader;
+	Graphics::VAO m_Vao;
+	Graphics::VBO m_Vbo;
+	Graphics::EBO m_Ebo;
+	Graphics::Texture m_Texture;
+
+	// data
+	glm::vec3 m_Position;
+	glm::vec3 m_Scale;
+	glm::vec3 m_Rotation;
 
 	// shader variables
-	GLuint transformLoc;
-	glm::mat4x4 transform;
+	/// TODO
+	GLuint m_TransformReference;
+	glm::mat4x4 m_Transform;
 public:
 	Entity();
-	void initialize(std::string vert, std::string frag, std::string path);
+	void initialize(std::string vertexPath, std::string fragmentPath, std::string texturePath);
 	void render();
 	void destroy();
 };
