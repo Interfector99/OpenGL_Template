@@ -1,29 +1,21 @@
 #version 460 core
 
-// Positions/Coordinates
-layout (location = 0) in vec3 aPos;
-// Colors
-layout (location = 1) in vec3 aColor;
-// Texture Coordinates
-layout (location = 2) in vec2 aTex;
+layout (location = 0) in vec3 a_Position;
+layout (location = 1) in vec3 a_Color;
+layout (location = 2) in vec2 a_Texture;
 
+uniform mat4 transform;
 
-// Outputs the color for the Fragment Shader
+out vec3 position;
 out vec3 color;
-// Outputs the texture coordinates to the fragment shader
-out vec2 texCoord;
+out vec2 texture;
 
-
-// Controls the scale of the vertices
-uniform float scale;
-uniform vec2 position;
 
 void main()
 {
-	// Outputs the positions/coordinates of all vertices
-	gl_Position = vec4(aPos.x * scale + position.x / 20.0, aPos.y * scale + position.y / 20.0, 0.0f, 1.0);
-	// Assigns the colors from the Vertex Data to "color"
-	color = aColor;
-	// Assigns the texture coordinates from the Vertex Data to "texCoord"
-	texCoord = aTex;
+	position = a_Position;
+	color = a_Color;
+	texture = a_Texture;
+
+	gl_Position = transform * vec4(a_Position, 1.0f);
 }

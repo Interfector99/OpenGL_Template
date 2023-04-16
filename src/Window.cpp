@@ -19,13 +19,12 @@ namespace display
 		this->m_Height =	   m_Height;
 		this->m_Framerate =	   m_Framerate;
 
-		// this->entity.initialize("resources/shaders/entity.vert","resources/shaders/entity.frag","resources/textures/icon.png",50.0f);
 
 		glfwInit();
 		this->p_Window = glfwCreateWindow(this->m_Width, this->m_Height, this->m_Name.c_str(), NULL, NULL);
 		if (this->p_Window == NULL)
 		{
-			throw "Failed to initialize GLFW window";
+			throw "WINDOW::INIT -> Failed to initialize GLFW window";
 			glfwTerminate();
 		}
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -34,10 +33,18 @@ namespace display
 		glfwMakeContextCurrent(this->p_Window);
 		gladLoadGL();
 		std::cout << "Window initialized" << std::endl;
+
+
+		glEnable(GL_BLEND);
+		//glEnable(GL_DEPTH_TEST);
 	}
 
 	void Window::render()
 	{
+		this->entity.initialize("resources/shaders/entity.vert", 
+								"resources/shaders/entity.frag", 
+								"resources/textures/pacman.jpeg");
+
 		auto start = std::chrono::high_resolution_clock::now();
 		while (!glfwWindowShouldClose(this->p_Window))
 		{
@@ -49,13 +56,14 @@ namespace display
 			if (duration.count() >= (1.0f / this->m_Framerate) * 1000.0f)
 			{
 				auto deltaTime = duration.count() / 1000.0f;
-				std::cout << deltaTime << std::endl;
 				start = std::chrono::high_resolution_clock::now();
 
 				glClearColor(0.4f, 0.2f, 0.8f, 1.0f);
 				glClear(GL_COLOR_BUFFER_BIT);
 
 				// rendering goes here
+				this->entity.render();
+
 
 				glfwSwapBuffers(this->p_Window);
 			}
@@ -67,6 +75,7 @@ namespace display
 	{
 		glfwDestroyWindow(this->p_Window);
 		glfwTerminate();
+		this->entity.destroy();
 		std::cout << "Window destroyed" << std::endl;
 	}
 

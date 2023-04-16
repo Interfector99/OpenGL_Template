@@ -4,17 +4,19 @@
 
 #include<glad/glad.h>
 
-class VBO
+namespace Graphics
 {
-public:
-	GLuint ID;
+	class VBO
+	{
+	public:
+		GLuint ID;
 
-	VBO(GLfloat* vertices, GLsizeiptr size);
-	VBO();
-
-	void Bind();
-	void Unbind();
-	void Delete();
-};
+		VBO();
+		void init(GLfloat* vertices, GLsizeiptr size);
+		void bind();
+		void unbind();
+		void destroy();
+	};
+}
 
 #endif // VBO_HPP

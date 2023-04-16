@@ -1,4 +1,3 @@
-// include own modules
 #include "Window.hpp"
 
 int main()

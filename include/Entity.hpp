@@ -1,49 +1,45 @@
 #pragma once
+#ifndef ENTITY_HPP
+#define ENTITY_HPP
+
+// C++ modules
 #include <iostream>
 #include <chrono>
 #include <cmath>
 #include <vector>
 
+// OpenGL modules
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+// own modules
 #include "Texture.hpp"
 #include "Shader.hpp"
 #include "VAO.hpp"
 #include "VBO.hpp"
 #include "EBO.hpp"
 
-#include "stb/stb_image.h"
-
-using namespace std;
-
 class Entity
 {
 protected:
 	// graphics
-	Shader shader;
-	VAO vao;
-	VBO vbo;
-	EBO ebo;
-	Texture texture;
+	Graphics::Shader shader;
+	Graphics::VAO vao;
+	Graphics::VBO vbo;
+	Graphics::EBO ebo;
+	Graphics::Texture texture;
 
-	// overall scale
-	GLuint scaleLoc;
-	float scale;
-
-	// position
-	GLuint positionLoc;
-	glm::vec2 position;
+	// shader variables
+	GLuint transformLoc;
+	glm::mat4x4 transform;
 public:
 	Entity();
-	void initialize(string vert, string frag, string path, float scale);
+	void initialize(std::string vert, std::string frag, std::string path);
 	void render();
 	void destroy();
-
-	void setPosition(glm::vec2 position);
-	glm::vec2 getPosition();
 };
 
+#endif // ENTITY_HPP

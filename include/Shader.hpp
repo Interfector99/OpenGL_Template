@@ -1,4 +1,6 @@
 #pragma once
+#ifndef SHADER_HPP
+#define SHADER_HPP
 
 #include<glad/glad.h>
 #include<string>
@@ -7,22 +9,22 @@
 #include<iostream>
 #include<cerrno>
 
-std::string get_file_contents(const char* filename);
-
-class Shader
+namespace Graphics
 {
-public:
-	// Reference ID of the Shader Program
-	GLuint ID;
-	// Constructor that build the Shader Program from 2 different shaders
-	Shader(const char* vertexFile, const char* fragmentFile);
-	Shader();
-	// Activates the Shader Program
-	void Activate();
-	// Deletes the Shader Program
-	void Delete();
-private:
-	// Checks if the different Shaders have compiled properly
-	void compileErrors(unsigned int shader, const char* type);
-};
+	std::string get_file_contents(const char* filename);
 
+	class Shader
+	{
+	public:
+		GLuint ID;
+
+		Shader();
+		void init(const char* vertexFile, const char* fragmentFile);
+		void bind();
+		void destroy();
+	private:
+		void compileErrors(unsigned int shader, const char* type);
+	};
+}
+
+#endif // SHADER_HPP
