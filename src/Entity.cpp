@@ -33,7 +33,7 @@ void Entity::initialize(std::string vertexPath, std::string fragmentPath, std::s
 	m_Vbo.unbind();
 	m_Ebo.unbind();
 	m_Texture.init(texturePath.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	m_Texture.setTextureUnit(m_Shader, "tex0", 0);
+	m_Shader.setSampler2D("textureUnit", 0);
 
 	m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_Scale = glm::vec3(50.0f, 50.0f, 0.0f);;
@@ -53,8 +53,7 @@ void Entity::render()
 	m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.x), glm::vec3(1.0, 0.0, 0.0));
 	m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.y), glm::vec3(0.0, 1.0, 0.0));
 	m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.z), glm::vec3(0.0, 0.0, 1.0));
-	m_TransformReference = glGetUniformLocation(m_Shader.ID, "transform");
-	glUniformMatrix4fv(m_TransformReference, 1, GL_FALSE, glm::value_ptr(m_Transform));
+	m_Shader.setMat4("transform", m_Transform);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

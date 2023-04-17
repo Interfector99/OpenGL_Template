@@ -59,13 +59,6 @@ namespace Graphics
 		glBindTexture(texType, 0);
 	}
 
-	void Texture::setTextureUnit(Shader& shader, const char* uniform, GLuint unit)
-	{
-		GLuint textureUnit = glGetUniformLocation(shader.ID, uniform);
-		shader.bind();
-		glUniform1i(textureUnit, unit);
-	}
-
 	void Texture::bind()
 	{
 		glBindTexture(type, ID);
