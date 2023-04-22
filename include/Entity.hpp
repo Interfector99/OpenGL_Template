@@ -11,7 +11,7 @@
 // OpenGL modules
 #include <GLFW/glfw3.h>
 
-// Graphics modules
+// own modules
 #include "Texture.hpp"
 #include "Shader.hpp"
 #include "VAO.hpp"
@@ -21,11 +21,16 @@
 class Entity
 {
 protected:
+	// window
+	GLuint	m_Width;
+	GLuint	m_Height;
+	GLfloat	m_Gamespeed;
+
 	// graphics
-	Graphics::Shader m_Shader;
-	Graphics::VAO m_Vao;
-	Graphics::VBO m_Vbo;
-	Graphics::EBO m_Ebo;
+	Graphics::Shader  m_Shader;
+	Graphics::VAO	  m_Vao;
+	Graphics::VBO	  m_Vbo;
+	Graphics::EBO	  m_Ebo;
 	Graphics::Texture m_Texture;
 
 	// data
@@ -33,14 +38,14 @@ protected:
 	glm::vec3 m_Scale;
 	glm::vec3 m_Rotation;
 
-	// shader variables
-	/// TODO
-	GLuint m_TransformReference;
+	// shader uniforms
 	glm::mat4x4 m_Transform;
 public:
 	Entity();
-	void initialize(std::string vertexPath, std::string fragmentPath, std::string texturePath);
+	// receive the window object
+	void initialize(int vertexPath, int fragmentPath, int texturePath);
 	void render();
+	void update(float deltaTime);
 	void destroy();
 };
 

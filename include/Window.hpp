@@ -14,14 +14,19 @@ namespace display
 		GLuint		m_Width;
 		GLuint		m_Height;
 		GLuint		m_Framerate;
+		GLfloat		m_Gamespeed;
 
 		GLFWwindow* p_Window;
+		Graphics::Texture m_Icon;
 
 		Entity entity;
 
 	public:
 		Window();
-		void init(std::string, bool, GLuint, GLuint, GLuint);
+		void init(std::string name,
+				  std::string icon,
+				  bool isFullscreen, 
+				  GLfloat gamespeed);
 		void render();
 		void destroy();
 

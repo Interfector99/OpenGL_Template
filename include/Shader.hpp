@@ -8,12 +8,15 @@
 #include<sstream>
 #include<iostream>
 #include<cerrno>
+#include <windows.h>
 
 // OpenGL modules
 #include<glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "../resource.h"
 
 namespace Graphics
 {
@@ -25,7 +28,7 @@ namespace Graphics
 		GLuint ID;
 
 		Shader();
-		void init(const char* vertexFile, const char* fragmentFile);
+		void init(int vertexFile, int fragmentFile);
 		void bind();
 		void destroy();
 

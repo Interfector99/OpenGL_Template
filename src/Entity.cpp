@@ -19,9 +19,13 @@ Entity::Entity()
 
 }
 
-void Entity::initialize(std::string vertexPath, std::string fragmentPath, std::string texturePath)
+void Entity::initialize(int vertexPath, int fragmentPath, int texturePath)
 {
-	m_Shader.init(vertexPath.c_str(), fragmentPath.c_str());
+	m_Width = 1920;
+	m_Height = 1080;
+	m_Gamespeed = 1.0f;
+
+	m_Shader.init(vertexPath, fragmentPath);
 	m_Vao.init();
 	m_Vao.bind();
 	m_Vbo.init(vertices, sizeof(vertices));
@@ -32,12 +36,12 @@ void Entity::initialize(std::string vertexPath, std::string fragmentPath, std::s
 	m_Vao.unbind();
 	m_Vbo.unbind();
 	m_Ebo.unbind();
-	m_Texture.init(texturePath.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	m_Texture.init(texturePath, GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	m_Shader.setSampler2D("textureUnit", 0);
 
 	m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
-	m_Scale = glm::vec3(50.0f, 50.0f, 0.0f);;
-	m_Rotation = glm::vec3(0.0f, 0.0f, 0.0f);;
+	m_Scale = glm::vec3(50.0f, 50.0f, 0.0f);
+	m_Rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 void Entity::render()
@@ -46,18 +50,28 @@ void Entity::render()
 	m_Texture.bind();
 	m_Vao.bind();
 
-	m_Rotation.z += 1.0f;
+	/*glm::vec3 position = glm::vec3((float)(m_Position.x / m_Width) * 100, (float)(m_Position.y / m_Height) * 100, 0.0f);
+	glm::vec3 scale =    glm::vec3((float)(m_Scale.x / m_Width) * 100, (float)(m_Scale.y / m_Height) * 100, 0.0f);*/
+
 	m_Transform = glm::mat4(1.0f);
-	m_Transform = glm::translate(m_Transform, m_Position);
-	m_Transform = glm::scale(m_Transform, m_Scale);
+	m_Rotation.z += 0.1f;
 	m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.x), glm::vec3(1.0, 0.0, 0.0));
 	m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.y), glm::vec3(0.0, 1.0, 0.0));
 	m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.z), glm::vec3(0.0, 0.0, 1.0));
+	m_Transform = glm::scale(m_Transform, m_Scale);
+	m_Transform = glm::translate(m_Transform, m_Position);
+	
+	
 	m_Shader.setMat4("transform", m_Transform);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBlendFunc(GL_ONE, GL_ZERO);
+}
+
+void Entity::update(float deltaTime)
+{
+
 }
 
 void Entity::destroy()

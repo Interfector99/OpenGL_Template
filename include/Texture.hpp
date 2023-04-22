@@ -14,7 +14,7 @@ namespace Graphics
 		GLuint ID;
 		GLenum type;
 
-		void init(const char* image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType);
+		void init(int image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType);
 		Texture();
 		void bind();
 		void unbind();

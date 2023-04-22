@@ -1,11 +1,12 @@
 #include "Window.hpp"
 
+
 int main()
 {
 	display::Window window = display::Window();
 	try
 	{
-		window.init("Template", false, 800, 800, 60);
+		window.init("Template", "resources/textures/icon.png", false, 1.0f);
 		window.render();
 		window.destroy();
 	}

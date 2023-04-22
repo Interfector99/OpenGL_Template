@@ -2,48 +2,73 @@
 
 namespace display
 {
+#define ANCESTOR "IDB_PNG1"
+#define PACMAN 102
+
 	Window::Window()
 	{
 		std::cout << "Window created" << std::endl;
 	}
 
-	void Window::init(std::string m_Name,
-					  bool m_IsFullscreen,
-					  GLuint m_Width,
-					  GLuint m_Height,
-					  GLuint m_Framerate)
+	void Window::init(std::string name,
+					  std::string icon,
+					  bool isFullscreen,
+					  GLfloat gamespeed)
 	{
-		this->m_Name =		   m_Name;
-		this->m_IsFullscreen = m_IsFullscreen;
-		this->m_Width =		   m_Width;
-		this->m_Height =	   m_Height;
-		this->m_Framerate =	   m_Framerate;
-
-
 		glfwInit();
-		this->p_Window = glfwCreateWindow(this->m_Width, this->m_Height, this->m_Name.c_str(), NULL, NULL);
+		const GLFWvidmode* monitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+		this->m_Name =		   name;
+		this->m_IsFullscreen = isFullscreen;
+		this->m_Width =		   monitorMode->width;
+		this->m_Height =	   monitorMode->height;
+		this->m_Framerate =    monitorMode->refreshRate;
+		this->m_Gamespeed =    gamespeed;
+
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		// glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+		glfwWindowHint(GLFW_SAMPLES, 16);
+		glfwWindowHint(GLFW_REFRESH_RATE, this->m_Framerate);
+		//this->p_Window = glfwCreateWindow(this->m_Width, this->m_Height, this->m_Name.c_str(), glfwGetPrimaryMonitor(), NULL);
+		this->p_Window = glfwCreateWindow(1280, 720, this->m_Name.c_str(), NULL, NULL);
 		if (this->p_Window == NULL)
 		{
 			throw "WINDOW::INIT -> Failed to initialize GLFW window";
 			glfwTerminate();
 		}
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+		// Load the PNG image resource
+		HMODULE hModule = GetModuleHandle(NULL);
+		HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(100), MAKEINTRESOURCE(PNG));
+		HGLOBAL hMemory = LoadResource(hModule, hResource);
+		LPVOID pData = LockResource(hMemory);
+		DWORD dwSize = SizeofResource(hModule, hResource);
+
+		// set icon
+		GLFWimage icons[1];
+		icons[0].pixels = stbi_load_from_memory(static_cast<const stbi_uc*>(pData), dwSize, &icons[0].width, &icons[0].height, 0, STBI_rgb_alpha);
+		glfwSetWindowIcon(this->p_Window, 1, icons);
+		stbi_image_free(icons[0].pixels);
+
+		glfwSetWindowAttrib(this->p_Window, GLFW_RESIZABLE, GL_FALSE);
+		glfwSetInputMode(this->p_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		glfwMakeContextCurrent(this->p_Window);
 		gladLoadGL();
 		std::cout << "Window initialized" << std::endl;
 
 
 		glEnable(GL_BLEND);
-		//glEnable(GL_DEPTH_TEST);
+		glEnable(GL_STENCIL_TEST);
+		glEnable(GL_MULTISAMPLE);
 	}
 
 	void Window::render()
 	{
-		this->entity.initialize("resources/shaders/entity.vert", 
-								"resources/shaders/entity.frag", 
-								"resources/textures/pacman.jpg");
+		this->entity.initialize(200, 
+								201, 
+								101);
 
 		auto start = std::chrono::high_resolution_clock::now();
 		while (!glfwWindowShouldClose(this->p_Window))
@@ -58,8 +83,11 @@ namespace display
 				auto deltaTime = duration.count() / 1000.0f;
 				start = std::chrono::high_resolution_clock::now();
 
-				glClearColor(0.4f, 0.2f, 0.8f, 1.0f);
-				glClear(GL_COLOR_BUFFER_BIT);
+				glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
+				glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+				// physics update
+				this->entity.update(deltaTime);
 
 				// rendering goes here
 				this->entity.render();

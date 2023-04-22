@@ -2,9 +2,21 @@
 
 namespace Graphics
 {
-	std::string get_file_contents(const char* filename)
+	std::string get_file_contents(int filename)
 	{
-		std::ifstream in(filename, std::ios::binary);
+		// Load the PNG image resource
+		std::string result;
+		HMODULE hModule = GetModuleHandle(NULL);
+		HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(filename), MAKEINTRESOURCE(SHADER));
+		HGLOBAL hMemory = LoadResource(hModule, hResource);
+		LPVOID pData = LockResource(hMemory);
+		DWORD dwSize = SizeofResource(hModule, hResource);
+		char* hFinal = (char*)LockResource(pData);
+		result.assign(hFinal, dwSize);
+		std::cout << result << std::endl;
+		return result;
+
+		/*std::ifstream in(filename, std::ios::binary);
 		if (in)
 		{
 			std::string contents;
@@ -15,7 +27,7 @@ namespace Graphics
 			in.close();
 			return(contents);
 		}
-		throw(errno);
+		throw(errno);*/
 	}
 
 	Shader::Shader()
@@ -23,7 +35,7 @@ namespace Graphics
 
 	}
 
-	void Shader::init(const char* vertexFile, const char* fragmentFile)
+	void Shader::init(int vertexFile, int fragmentFile)
 	{
 		std::string vertexCode = get_file_contents(vertexFile);
 		std::string fragmentCode = get_file_contents(fragmentFile);
