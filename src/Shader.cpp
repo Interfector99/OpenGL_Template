@@ -4,7 +4,7 @@ namespace Graphics
 {
 	std::string get_file_contents(int filename)
 	{
-		// Load the PNG image resource
+		// Load the shader string resource
 		std::string result;
 		HMODULE hModule = GetModuleHandle(NULL);
 		HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(filename), MAKEINTRESOURCE(SHADER));
@@ -13,21 +13,7 @@ namespace Graphics
 		DWORD dwSize = SizeofResource(hModule, hResource);
 		char* hFinal = (char*)LockResource(pData);
 		result.assign(hFinal, dwSize);
-		std::cout << result << std::endl;
 		return result;
-
-		/*std::ifstream in(filename, std::ios::binary);
-		if (in)
-		{
-			std::string contents;
-			in.seekg(0, std::ios::end);
-			contents.resize(in.tellg());
-			in.seekg(0, std::ios::beg);
-			in.read(&contents[0], contents.size());
-			in.close();
-			return(contents);
-		}
-		throw(errno);*/
 	}
 
 	Shader::Shader()

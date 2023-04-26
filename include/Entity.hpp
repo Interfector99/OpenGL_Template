@@ -13,7 +13,6 @@
 
 // own modules
 #include "Texture.hpp"
-#include "Shader.hpp"
 #include "VAO.hpp"
 #include "VBO.hpp"
 #include "EBO.hpp"
@@ -21,11 +20,6 @@
 class Entity
 {
 protected:
-	// window
-	GLuint	m_Width;
-	GLuint	m_Height;
-	GLfloat	m_Gamespeed;
-
 	// graphics
 	Graphics::Shader  m_Shader;
 	Graphics::VAO	  m_Vao;
@@ -39,14 +33,18 @@ protected:
 	glm::vec3 m_Rotation;
 
 	// shader uniforms
+	glm::mat4x4 m_Projection;
+	glm::mat4x4 m_View;
 	glm::mat4x4 m_Transform;
 public:
 	Entity();
 	// receive the window object
-	void initialize(int vertexPath, int fragmentPath, int texturePath);
-	void render();
+	void init(int vertexPath, int fragmentPath, int texturePath);
+	void render(glm::mat4 projection, glm::mat4 view);
 	void update(float deltaTime);
 	void destroy();
+
+	void translate(glm::vec3 translation);
 };
 
 #endif // ENTITY_HPP

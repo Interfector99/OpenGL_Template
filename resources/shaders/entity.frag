@@ -8,7 +8,6 @@ uniform sampler2D textureUnit;
 
 out vec4 fragmentColor;
 
-
 void main()
 {
 	fragmentColor = texture2D(textureUnit, texture) * vec4(color,1.0);

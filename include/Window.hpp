@@ -3,6 +3,7 @@
 #define WINDOW_HPP
 
 #include "Entity.hpp"
+#include "Camera2D.hpp"
 
 namespace display
 {
@@ -17,9 +18,11 @@ namespace display
 		GLfloat		m_Gamespeed;
 
 		GLFWwindow* p_Window;
-		Graphics::Texture m_Icon;
+
+		Camera2D m_Camera2D;
 
 		Entity entity;
+		Entity entity2;
 
 	public:
 		Window();

@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\Camera2D.cpp" />
     <ClCompile Include="src\EBO.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Shader.cpp" />
@@ -171,8 +172,10 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Camera2D.hpp" />
     <ClInclude Include="include\EBO.hpp" />
     <ClInclude Include="include\Entity.hpp" />
+    <ClInclude Include="include\Resource.hpp" />
     <ClInclude Include="include\Shader.hpp" />
     <ClInclude Include="include\Texture.hpp" />
     <ClInclude Include="include\VAO.hpp" />
@@ -183,9 +186,11 @@
   <ItemGroup>
     <None Include="resources\shaders\entity.frag" />
     <None Include="resources\shaders\entity.vert" />
+    <None Include="resources\shaders\text.frag" />
+    <None Include="resources\shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Template.rc" />
+    <ResourceCompile Include="resources\Resources.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

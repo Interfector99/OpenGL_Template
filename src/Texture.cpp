@@ -2,39 +2,33 @@
 
 namespace Graphics
 {
+	unsigned char* loadPNGResource(int resource, int& widthImg, int& heightImg, int& numColCh)
+	{
+		HMODULE hModule = GetModuleHandle(NULL);
+		HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(resource), MAKEINTRESOURCE(PNG));
+		HGLOBAL hMemory = LoadResource(hModule, hResource);
+		LPVOID pData = LockResource(hMemory);
+		DWORD dwSize = SizeofResource(hModule, hResource);
+
+		unsigned char* bytes = stbi_load_from_memory(static_cast<const stbi_uc*>(pData), dwSize, &widthImg, &heightImg, &numColCh, STBI_rgb_alpha);
+		return bytes;
+	}
+
 	Texture::Texture()
 	{
 
 	}
 
-	HMODULE GCM()
-	{
-		//HMODULE hModule = GetModuleHandle(NULL);
-		HMODULE hModule = NULL;
-		GetModuleHandleEx(
-			GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS /* | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT*/,
-			(LPCWSTR)&GCM,
-			&hModule);
-		return hModule;
-	}
-
 	void Texture::init(int image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType)
 	{
-		// Load the PNG image resource
-		HMODULE hModule = GetModuleHandle(NULL);
-		HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(image), MAKEINTRESOURCE(PNG));
-		HGLOBAL hMemory = LoadResource(hModule, hResource);
-		LPVOID pData = LockResource(hMemory);
-		DWORD dwSize = SizeofResource(hModule, hResource);
-
 		type = texType;
+		stbi_set_flip_vertically_on_load(true);
 
 		int widthImg, heightImg, numColCh;
-		stbi_set_flip_vertically_on_load(true);
-		unsigned char* bytes = stbi_load_from_memory(static_cast<const stbi_uc*>(pData), dwSize , &widthImg, &heightImg, &numColCh, STBI_rgb_alpha);
+		unsigned char* bytes = loadPNGResource(image, widthImg, heightImg, numColCh);
 		if (bytes == 0)
 		{
-			// throw "TEXTURE::INIT -> Texture not found";
+			throw "TEXTURE::INIT -> Texture not found";
 		}
 
 		glGenTextures(1, &ID);

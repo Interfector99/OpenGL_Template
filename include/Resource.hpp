@@ -13,11 +13,16 @@
 #endif
 #endif
 
+// Resource IDs
 #define PNG 255
 #define SHADER 254
 
+// PNG resources
 #define ANCESTOR 100
 #define PACMAN 101
 
+// Shader resources
 #define ENTITY_VERT 200
 #define ENTITY_FRAG 201
+#define TEXT_VERT 202
+#define TEXT_FRAG 203

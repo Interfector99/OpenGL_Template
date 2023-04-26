@@ -2,9 +2,6 @@
 
 namespace display
 {
-#define ANCESTOR "IDB_PNG1"
-#define PACMAN 102
-
 	Window::Window()
 	{
 		std::cout << "Window created" << std::endl;
@@ -41,7 +38,7 @@ namespace display
 
 		// Load the PNG image resource
 		HMODULE hModule = GetModuleHandle(NULL);
-		HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(100), MAKEINTRESOURCE(PNG));
+		HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(ANCESTOR), MAKEINTRESOURCE(PNG));
 		HGLOBAL hMemory = LoadResource(hModule, hResource);
 		LPVOID pData = LockResource(hMemory);
 		DWORD dwSize = SizeofResource(hModule, hResource);
@@ -66,9 +63,11 @@ namespace display
 
 	void Window::render()
 	{
-		this->entity.initialize(200, 
-								201, 
-								101);
+		this->entity.init(ENTITY_VERT, ENTITY_FRAG, ANCESTOR);
+		this->entity2.init(ENTITY_VERT, ENTITY_FRAG, ANCESTOR);
+		this->entity.translate(glm::vec3(0.0f, 0.0f, 0.0f));
+		this->entity2.translate(glm::vec3(0.0f, 0.3f, 1.0f));
+		this->m_Camera2D.init(this->m_Width, this->m_Height);
 
 		auto start = std::chrono::high_resolution_clock::now();
 		while (!glfwWindowShouldClose(this->p_Window))
@@ -83,14 +82,18 @@ namespace display
 				auto deltaTime = duration.count() / 1000.0f;
 				start = std::chrono::high_resolution_clock::now();
 
-				glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
-				glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+				glClearColor(0.0f, 0.0f, 0.15f, 1.0f);
+				glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);
 
 				// physics update
 				this->entity.update(deltaTime);
+				this->entity2.update(deltaTime);
+
+				glm::mat4 projection = glm::perspective(glm::radians(55.0f), (float)m_Width / (float)m_Height, 0.1f, 100.0f);
 
 				// rendering goes here
-				this->entity.render();
+				this->entity.render(projection, m_Camera2D.getView());	
+				this->entity2.render(projection, m_Camera2D.getView());
 
 
 				glfwSwapBuffers(this->p_Window);
@@ -104,6 +107,7 @@ namespace display
 		glfwDestroyWindow(this->p_Window);
 		glfwTerminate();
 		this->entity.destroy();
+		this->entity2.destroy();
 		std::cout << "Window destroyed" << std::endl;
 	}
 
