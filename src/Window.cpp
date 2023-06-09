@@ -66,7 +66,7 @@ namespace display
 		this->entity.init(ENTITY_VERT, ENTITY_FRAG, ANCESTOR);
 		this->entity2.init(ENTITY_VERT, ENTITY_FRAG, ANCESTOR);
 		this->entity.translate(glm::vec3(0.0f, 0.0f, 0.0f));
-		this->entity2.translate(glm::vec3(0.0f, 0.3f, 1.0f));
+		this->entity2.translate(glm::vec3(0.0f, 0.3f, -1.0f));
 		this->m_Camera2D.init(this->m_Width, this->m_Height);
 
 		auto start = std::chrono::high_resolution_clock::now();
